@@ -3,6 +3,18 @@ import { db } from "../../../db/config.js"
 import { users } from "../../../db/schema.js"
 import ApiError from "./ApiError.js"
 import jwt, { type SignOptions } from "jsonwebtoken"
+import fs from "node:fs"
+import path from "node:path"
+
+const privateKeyPath = path.resolve(process.cwd(), "cert", "private.pem")
+
+const getPrivateKey = () => {
+    try {
+        return fs.readFileSync(privateKeyPath, "utf8")
+    } catch {
+        throw new ApiError(500, "Private key is not defined")
+    }
+}
 
 export const generateTokens = async (userId: number) => {
     try {
@@ -13,13 +25,7 @@ export const generateTokens = async (userId: number) => {
         }
 
         const currentUser = user[0]!
-
-        const accessSecret = process.env.ACCESS_TOKEN_SECRET
-        const refreshSecret = process.env.REFRESH_TOKEN_SECRET
-
-        if (!accessSecret || !refreshSecret) {
-            throw new ApiError(500, "JWT secrets are not defined")
-        }
+        const privateKey = getPrivateKey()
 
         const accessExpiry = process.env.ACCESS_TOKEN_EXPIRY ?? "15m"
         const refreshExpiry = process.env.REFRESH_TOKEN_EXPIRY ?? "7d"
@@ -30,16 +36,22 @@ export const generateTokens = async (userId: number) => {
                 email: currentUser.email,
                 name: currentUser.name
             },
-            accessSecret,
-            { expiresIn: accessExpiry } as SignOptions
+            privateKey,
+            {
+                algorithm: "RS256",
+                expiresIn: accessExpiry
+            } as SignOptions
         )
 
         const refreshToken = jwt.sign(
             {
                 id: currentUser.id
             },
-            refreshSecret,
-            { expiresIn: refreshExpiry } as SignOptions
+            privateKey,
+            {
+                algorithm: "RS256",
+                expiresIn: refreshExpiry
+            } as SignOptions
         )
 
         await db
