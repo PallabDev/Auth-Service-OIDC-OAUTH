@@ -5,7 +5,7 @@ export default defineConfig({
     schema: './src/db/schema.ts',
     dialect: 'postgresql',
     dbCredentials: {
-        url: process.env.DATABASE_URL,
+        url: process.env.MIGRATION_DATABASE_URL ?? process.env.DATABASE_URL,
     },
 });
 //# sourceMappingURL=drizzle.config.js.map
