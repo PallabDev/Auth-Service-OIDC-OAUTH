@@ -29,7 +29,13 @@ const getBearerToken = (authorizationHeader?: string) => {
         return null;
     }
 
-    return authorizationHeader.slice(7).trim();
+    const token = authorizationHeader.slice(7).trim();
+
+    if (!token || token.split(".").length !== 3) {
+        return null;
+    }
+
+    return token;
 }
 
 export const verifyAccessToken = (
@@ -43,14 +49,26 @@ export const verifyAccessToken = (
         throw new ApiError(401, "Access token required");
     }
 
-    const decodedToken = jwt.verify(token, getPublicKey(), {
-        algorithms: ["RS256"]
-    });
+    try {
+        const decodedToken = jwt.verify(token, getPublicKey(), {
+            algorithms: ["RS256"]
+        });
 
-    if (typeof decodedToken === "string" || typeof decodedToken.id !== "number") {
-        throw new ApiError(401, "Invalid access token");
+        if (typeof decodedToken === "string" || typeof decodedToken.id !== "number") {
+            throw new ApiError(401, "Invalid access token");
+        }
+
+        req.user = decodedToken as AccessTokenPayload;
+        next();
+    } catch (error) {
+        if (error instanceof jwt.TokenExpiredError) {
+            throw new ApiError(401, "Access token expired");
+        }
+
+        if (error instanceof jwt.JsonWebTokenError) {
+            throw new ApiError(401, "Invalid access token");
+        }
+
+        throw error;
     }
-
-    req.user = decodedToken as AccessTokenPayload;
-    next();
 }

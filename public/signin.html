@@ -3,89 +3,137 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Signin</title>
+    <title>HexAuth | Login</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="min-h-screen bg-slate-950 text-slate-100">
-    <div class="absolute inset-0 bg-[radial-gradient(circle_at_top_right,_rgba(34,197,94,0.18),_transparent_32%),radial-gradient(circle_at_bottom_left,_rgba(59,130,246,0.16),_transparent_28%)]"></div>
-    <main class="relative mx-auto flex min-h-screen max-w-5xl items-center px-4 py-10 sm:px-6">
-        <div class="grid w-full overflow-hidden rounded-[2rem] border border-white/10 bg-white/5 shadow-2xl shadow-emerald-950/20 lg:grid-cols-[1fr_0.9fr]">
-            <section class="p-8 sm:p-10">
-                <p class="text-sm font-semibold uppercase tracking-[0.3em] text-emerald-200">Authorization Code</p>
-                <h1 class="mt-5 text-4xl font-black tracking-tight text-white">Signin and return a code to your client</h1>
-                <p class="mt-4 max-w-md text-base leading-7 text-slate-300">This page checks the user credentials, validates the client, and sends the browser back to the registered callback URL with an authorization code.</p>
-                <div class="mt-8 grid gap-4 sm:grid-cols-2">
-                    <div class="rounded-2xl border border-white/10 bg-slate-900/70 p-4">
-                        <p class="text-sm font-semibold text-white">No direct tokens</p>
-                        <p class="mt-2 text-sm text-slate-400">Signin now returns a code instead of access and refresh tokens.</p>
-                    </div>
-                    <div class="rounded-2xl border border-white/10 bg-slate-900/70 p-4">
-                        <p class="text-sm font-semibold text-white">Token exchange</p>
-                        <p class="mt-2 text-sm text-slate-400">Your client backend should exchange the code at `/api/auth/token`.</p>
-                    </div>
-                </div>
-            </section>
+<body class="min-h-screen bg-[var(--bg)] text-[var(--text)] transition-colors duration-300 font-sans">
+    <main class="relative flex min-h-screen items-center justify-center p-4 overflow-hidden">
+        <div class="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(31,111,97,0.18),transparent_34%),radial-gradient(circle_at_bottom_right,rgba(224,138,91,0.18),transparent_30%)] pointer-events-none"></div>
+        
+        <div class="relative w-full max-w-[400px] rounded-xl border border-[var(--stroke)] bg-[var(--surface)] p-8 shadow-[0_8px_30px_rgb(0,0,0,0.12)]">
+            <div class="flex justify-center mb-6">
+                <a href="/" class="inline-flex items-center gap-2">
+                    <span class="flex h-10 w-10 items-center justify-center rounded-lg bg-[var(--accent)] text-lg font-bold text-[var(--accent-contrast)]">H</span>
+                    <span class="font-semibold tracking-wide">HexAuth</span>
+                </a>
+            </div>
 
-            <section class="bg-slate-900/80 p-8 sm:p-10">
-                <div id="client-meta" class="mb-6 rounded-2xl border border-white/10 bg-slate-950/80 p-4 text-sm text-slate-300"></div>
-                <form id="signin-form" class="space-y-5">
-                    <div>
-                        <label class="mb-2 block text-sm font-medium text-slate-200" for="email">Email address</label>
-                        <input id="email" name="email" type="email" required class="w-full rounded-2xl border border-white/10 bg-slate-950 px-4 py-3 text-white outline-none transition focus:border-emerald-400 focus:ring-2 focus:ring-emerald-400/30" placeholder="aarav@example.com">
-                    </div>
-                    <div>
-                        <label class="mb-2 block text-sm font-medium text-slate-200" for="password">Password</label>
-                        <input id="password" name="password" type="password" required class="w-full rounded-2xl border border-white/10 bg-slate-950 px-4 py-3 text-white outline-none transition focus:border-emerald-400 focus:ring-2 focus:ring-emerald-400/30" placeholder="Enter your password">
-                    </div>
-                    <button id="submit-button" type="submit" class="w-full rounded-2xl bg-emerald-400 px-4 py-3 text-sm font-bold uppercase tracking-[0.2em] text-slate-950 transition hover:bg-emerald-300">Signin and Continue</button>
-                </form>
-                <div id="status" class="mt-4 hidden rounded-2xl border px-4 py-3 text-sm"></div>
-                <p class="mt-6 text-sm text-slate-400">Need an account? <a class="font-semibold text-emerald-300 underline" id="signup-link" href="/api/auth/signup">Go to signup</a></p>
-            </section>
+            <div class="text-center mb-8">
+                <h1 id="form-title" class="text-2xl font-semibold tracking-tight text-[var(--text)]">Welcome back</h1>
+                <p id="helper-copy" class="mt-2 text-sm text-[var(--muted)]">Sign in to your account</p>
+            </div>
+
+            <div id="client-meta" class="mb-6 hidden rounded-lg border border-[var(--stroke)] bg-[var(--surface-soft)] p-4 text-sm text-[var(--muted)] text-center"></div>
+
+            <form id="signin-form" class="space-y-4">
+                <div>
+                    <label class="mb-1.5 block text-sm font-medium text-[var(--text)]" for="email">Email address</label>
+                    <input id="email" name="email" type="email" required class="w-full rounded-lg border border-[var(--stroke)] bg-[var(--surface-soft)] px-3.5 py-2.5 outline-none transition focus:border-[var(--accent)] focus:ring-1 focus:ring-[var(--accent)]" placeholder="alex@example.com">
+                </div>
+                <div>
+                    <label class="mb-1.5 block text-sm font-medium text-[var(--text)]" for="password">Password</label>
+                    <input id="password" name="password" type="password" required class="w-full rounded-lg border border-[var(--stroke)] bg-[var(--surface-soft)] px-3.5 py-2.5 outline-none transition focus:border-[var(--accent)] focus:ring-1 focus:ring-[var(--accent)]" placeholder="••••••••">
+                </div>
+                <button id="submit-button" type="submit" class="mt-2 w-full rounded-lg bg-[var(--accent)] px-4 py-2.5 text-sm font-semibold text-[var(--accent-contrast)] shadow-sm transition hover:opacity-90">Continue</button>
+            </form>
+
+            <div id="status" class="mt-4 hidden rounded-lg border border-transparent p-3 text-center text-sm font-medium"></div>
+
+            <p class="mt-6 text-center text-sm text-[var(--muted)]">
+                Don't have an account? <a id="signup-link" class="font-medium text-[var(--accent)] hover:underline" href="/user/register">Sign up</a>
+            </p>
         </div>
     </main>
 
     <script>
+        const tokenKey = "hexauth-access-token";
+        const userKey = "hexauth-user";
+        
+        // Ensure theme matches standard site style (light by default for clean look)
+        const applyTheme = () => {
+            const themes = {
+                light: {
+                    "--bg": "#fafafa",
+                    "--text": "#111827",
+                    "--muted": "#6b7280",
+                    "--stroke": "#e5e7eb",
+                    "--surface": "#ffffff",
+                    "--surface-soft": "#f9fafb",
+                    "--accent": "#0f172a",
+                    "--accent-contrast": "#ffffff"
+                }
+            };
+            Object.entries(themes.light).forEach(([key, value]) => document.documentElement.style.setProperty(key, value));
+        };
+        applyTheme();
+
         const params = new URLSearchParams(window.location.search);
         const clientId = params.get("client_id");
         const redirectUri = params.get("redirect_uri");
         const state = params.get("state");
+        const nextUrl = params.get("next");
         const form = document.getElementById("signin-form");
         const statusBox = document.getElementById("status");
-        const submitButton = document.getElementById("submit-button");
         const clientMeta = document.getElementById("client-meta");
         const signupLink = document.getElementById("signup-link");
+        const helperCopy = document.getElementById("helper-copy");
+        const formTitle = document.getElementById("form-title");
+        const submitButton = document.getElementById("submit-button");
 
         const setStatus = (message, type) => {
             statusBox.textContent = message;
-            statusBox.className = "mt-4 rounded-2xl border px-4 py-3 text-sm";
+            statusBox.className = "mt-4 rounded-lg border p-3 text-center text-sm font-medium";
             statusBox.classList.remove("hidden");
-
-            if (type === "error") {
-                statusBox.classList.add("border-rose-400/30", "bg-rose-400/10", "text-rose-100");
-                return;
-            }
-
-            statusBox.classList.add("border-emerald-400/30", "bg-emerald-400/10", "text-emerald-100");
+            statusBox.style.borderColor = type === "error" ? "#fca5a5" : "var(--stroke)";
+            statusBox.style.background = type === "error" ? "#fef2f2" : "var(--surface-soft)";
+            statusBox.style.color = type === "error" ? "#991b1b" : "var(--text)";
         };
 
-        if (clientId) {
-            clientMeta.innerHTML = `<p><span class="font-semibold text-white">Client ID:</span> <span class="break-all">${clientId}</span></p><p class="mt-2"><span class="font-semibold text-white">Redirect URI:</span> <span class="break-all">${redirectUri || "Registered redirect URL will be used."}</span></p>`;
-            signupLink.href = `/api/auth/signup${window.location.search}`;
-        } else {
-            clientMeta.innerHTML = `<p class="font-semibold text-rose-200">Missing client_id.</p><p class="mt-2 text-slate-400">Open signin from a registered client link so a code can be issued back to your app.</p>`;
-            submitButton.disabled = true;
-            submitButton.classList.add("cursor-not-allowed", "opacity-50");
+        const persistSession = (result) => {
+            localStorage.setItem(tokenKey, result.accessToken);
+            localStorage.setItem(userKey, JSON.stringify(result.user));
+        };
+
+        const setOwnerMode = () => {
+            signupLink.href = nextUrl ? `/user/register?next=${encodeURIComponent(nextUrl)}` : "/user/register";
+            formTitle.textContent = "Sign in";
+            helperCopy.textContent = "to continue to HexAuth";
+            submitButton.textContent = "Continue";
+        };
+
+        const setClientMode = async () => {
+            signupLink.href = `/user/register${window.location.search}`;
+            formTitle.textContent = "Sign in";
+            helperCopy.textContent = "to continue to application";
+            submitButton.textContent = "Continue";
+
+            try {
+                const response = await fetch(`/client/meta?client_id=${encodeURIComponent(clientId)}${redirectUri ? `&redirect_uri=${encodeURIComponent(redirectUri)}` : ""}`);
+                const result = await response.json();
+
+                if (!response.ok || !result.success) {
+                    throw new Error(result.message || "Unable to load project");
+                }
+
+                const { client } = result.data;
+                helperCopy.textContent = `to continue to ${client.applicationName}`;
+            } catch (error) {
+                setStatus(error.message || "Unable to load project", "error");
+            }
+        };
+
+        if (!clientId && localStorage.getItem(tokenKey) && localStorage.getItem(userKey)) {
+            window.location.href = nextUrl || "/dashboard";
         }
 
         form.addEventListener("submit", async (event) => {
             event.preventDefault();
-            setStatus("Signing in...", "info");
+            setStatus(clientId ? "Signing in..." : "Signing in...", "info");
 
             const payload = {
                 email: form.email.value,
                 password: form.password.value,
-                clientId,
+                clientId: clientId || undefined,
                 redirectUri: redirectUri || undefined,
                 state: state || undefined
             };
@@ -93,25 +141,38 @@
             try {
                 const response = await fetch(window.location.pathname, {
                     method: "POST",
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
+                    headers: { "Content-Type": "application/json" },
                     body: JSON.stringify(payload)
                 });
                 const result = await response.json();
 
                 if (!response.ok || !result.success) {
-                    throw new Error(result.message || "Signin failed");
+                    throw new Error(result.message || "Login failed");
                 }
 
-                setStatus("Authorization code created. Redirecting back to the client...", "info");
+                if (clientId) {
+                    setStatus("Success. Redirecting...", "info");
+                    setTimeout(() => {
+                        window.location.href = result.data.redirectTo;
+                    }, 500);
+                    return;
+                }
+
+                persistSession(result.data);
+                setStatus("Success. Redirecting...", "info");
                 setTimeout(() => {
-                    window.location.href = result.data.redirectTo;
-                }, 700);
+                    window.location.href = nextUrl || "/dashboard";
+                }, 350);
             } catch (error) {
-                setStatus(error.message || "Signin failed", "error");
+                setStatus(error.message || "Login failed", "error");
             }
         });
+
+        if (clientId) {
+            setClientMode();
+        } else {
+            setOwnerMode();
+        }
     </script>
 </body>
 </html>

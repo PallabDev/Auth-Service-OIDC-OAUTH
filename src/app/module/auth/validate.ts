@@ -19,12 +19,30 @@ export const userLogin = z.object({
     ...authClientFields
 })
 
+export const dashboardLogin = z.object({
+    email: z.string().email().max(322),
+    password: z.string().min(5).max(64)
+})
+
 
 export const oAuthClientRegister = z.object({
     applicationName: z.string().min(3).max(255),
-    contactEmail: z.string().max(322),
-    applicationUrl: z.string(),
-    redirectUrl: z.string()
+    contactEmail: z.string().email().max(322),
+    applicationUrl: z.string().url(),
+    redirectUrl: z.string().url()
+})
+
+export const oAuthClientUpdate = z.object({
+    applicationName: z.string().min(3).max(255),
+    contactEmail: z.string().email().max(322),
+    applicationUrl: z.string().url(),
+    redirectUrl: z.string().url()
+})
+
+export const dashboardSignup = z.object({
+    name: z.string().min(3).max(100),
+    email: z.string().email().max(322),
+    password: z.string().min(5).max(64)
 })
 
 export const tokenExchange = z.object({

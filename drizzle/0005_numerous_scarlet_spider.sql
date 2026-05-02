@@ -1,0 +1,1 @@
+ALTER TABLE "authorization_codes" ADD COLUMN "consumed_at" timestamp with time zone;
