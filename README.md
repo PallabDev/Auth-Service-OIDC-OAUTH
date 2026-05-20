@@ -35,8 +35,8 @@ A self-hosted **OAuth 2.0 / OpenID Connect (OIDC)** authentication server built 
 ### 1. Clone and install
 
 ```bash
-git clone <your-repo-url>
-cd "Auth Service"
+git clone https://github.com/PallabDev/Auth-Service-OIDC-OAUTH.git
+cd "Auth-Service-OIDC-OAUTH"
 npm install
 ```
 
